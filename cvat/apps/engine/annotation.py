@@ -20,6 +20,10 @@ from .data_manager import DataManager
 from .log import slogger
 from . import serializers
 
+# added gazes
+from cvat.apps.gaze.models import GazeSerializer
+from cvat.apps.gaze.utils import get_gazes_from_db
+
 class PatchAction(str, Enum):
     CREATE = "create"
     UPDATE = "update"
@@ -569,12 +573,19 @@ class JobAnnotation:
     def _init_version_from_db(self):
         db_commit = self.db_job.commits.last()
         self.ir_data.version = db_commit.version if db_commit else 0
+    
+    # added gazes
+    def _init_gazes_from_db(self):
+        gazes = get_gazes_from_db(self.db_job.segment.task.id)
+        serializer = GazeSerializer(gazes, many=True)
+        self.ir_data.gazes = serializer.data
 
     def init_from_db(self):
         self._init_tags_from_db()
         self._init_shapes_from_db()
         self._init_tracks_from_db()
         self._init_version_from_db()
+        self._init_gazes_from_db()
 
     @property
     def data(self):

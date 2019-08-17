@@ -12,6 +12,8 @@ from django.contrib.auth.models import User, Group
 from cvat.apps.engine import models
 from cvat.apps.engine.log import slogger
 
+# Gaze Feature
+from cvat.apps.gaze.models import GazeSerializer
 
 class AttributeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -362,6 +364,7 @@ class LabeledDataSerializer(serializers.Serializer):
     tags   = LabeledImageSerializer(many=True)
     shapes = LabeledShapeSerializer(many=True)
     tracks = LabeledTrackSerializer(many=True)
+    gazes = GazeSerializer(many=True, required=False)
 
 class FileInfoSerializer(serializers.Serializer):
     name = serializers.CharField(max_length=1024)

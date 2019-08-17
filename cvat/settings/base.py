@@ -103,6 +103,9 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'drf_yasg',
+    # ADDITIONAL APPS
+    'cvat.apps.gaze'
+    # cvat.apps.goturn
 ]
 
 REST_FRAMEWORK = {

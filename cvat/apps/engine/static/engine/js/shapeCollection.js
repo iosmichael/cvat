@@ -69,6 +69,9 @@ class ShapeCollectionModel extends Listener {
         this._colorIdx = 0;
         this._filter = new FilterModel(() => this.update());
         this._splitter = new ShapeSplitter();
+
+        // Gaze Display
+        this._gazes = [];
     }
 
     _nextGroupIdx() {
@@ -238,7 +241,7 @@ class ShapeCollectionModel extends Listener {
 
         // Make copy of data in order to don't affect original data
         data = JSON.parse(JSON.stringify(data));
-
+        this._gazes = data.gazes;
         for (const imported of data.shapes.concat(data.tracks)) {
             // Conversion from client object format to server object format
             if (imported.shapes) {
@@ -1500,6 +1503,47 @@ class ShapeCollectionView {
 
         ShapeCollectionView.sortByZOrder();
         this._frameMarker = window.cvat.player.frames.current;
+
+        /*
+        Gaze Feature Added:
+            window.cvat.player.geometry.frameWidth = frame.width;
+            window.cvat.player.geometry.frameHeight = frame.height;
+        */
+        let pts = this._controller._model._gazes[this._frameMarker].points;
+        var pt = [{
+            'x': pts[0] * 640,
+            'y': pts[1] * 480
+        }];
+        pt = window.cvat.translate.points.actualToCanvas(pt)[0];
+        if (this._currentGaze) {
+            this._currentGaze.remove();
+        }
+        var radial = this._frameContent.gradient('radial', function(stop) {
+            stop.at(0, 'rgba(246, 62, 73, 1)')
+            stop.at(0.5, 'rgba(246, 62, 73, 0.6)')
+            stop.at(1, 'rgba(246, 62, 73, 0)')
+        })
+
+        this._currentGaze = this._frameContent.circle(50).attr({
+            'fill': radial,
+            'z_order': 1,
+            'fill-opacity': 0.9
+        }).move(pt.x, pt.y);
+
+        var ptText = [{
+            'x': 640 - 100,
+            'y': 480 - 20
+        }]
+        ptText = window.cvat.translate.points.actualToCanvas(ptText)[0];
+        if (this._textGaze) {
+            this._textGaze.remove();
+        }
+        let confidence = this._controller._model._gazes[this._frameMarker].confidence
+        this._textGaze = this._frameContent.text(function(add){
+            add.tspan('Conf. ' + +confidence.toFixed(2))
+        }).move(ptText.x, ptText.y);
+
+
         this._updateLabelUIs();
 
         function drawView(shape, model) {

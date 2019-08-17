@@ -36,7 +36,11 @@ SENDFILE_BACKEND = 'sendfile.backends.development'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': 'localhost',
+        'PORT': 5432,
+        'NAME': 'cvat',
+        'USER': 'root',
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
     }
 }

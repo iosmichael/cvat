@@ -25,3 +25,11 @@ package-lock.json
 node_modules
 
 .DS_Store
+
+# Ignore Caffemodel files
+*.caffemodel
+*.prototxt
+
+# Ignore Media files
+*.mp4
+*.avi

@@ -1,0 +1,37 @@
+#
+# Copyright (C) 2018 Intel Corporation
+#
+# SPDX-License-Identifier: MIT
+#
+version: "2.0"
+
+services:
+  cvat_db:
+    container_name: cvat_db
+    image: postgres:10.3-alpine
+    networks:
+      default:
+        aliases:
+          - db
+    restart: always
+    ports: 
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_DB: cvat
+    volumes:
+      - cvat_db:/var/lib/postgresql/data
+
+  cvat_redis:
+    container_name: cvat_redis
+    image: redis:4.0.5-alpine
+    ports: 
+      - "6379:6379"
+    networks:
+      default:
+        aliases:
+          - redis
+    restart: always
+
+volumes:
+  cvat_db:

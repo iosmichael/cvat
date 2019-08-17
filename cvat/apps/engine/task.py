@@ -24,6 +24,9 @@ from distutils.dir_util import copy_tree
 from . import models
 from .log import slogger
 
+# Gaze Feature
+from cvat.apps.gaze.utils import preprocessing_gaze_file
+
 ############################# Low Level server API
 
 def create(tid, data):
@@ -240,6 +243,9 @@ def _create_thread(tid, data):
 
     if data['remote_files']:
         data['remote_files'] = _download_data(data['remote_files'], upload_dir)
+
+    # Gaze File Processing
+    tid, data = preprocessing_gaze_file(tid, upload_dir, data)
 
     media = _validate_data(data)
 

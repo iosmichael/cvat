@@ -44,6 +44,10 @@ class AnnotationIR:
     def version(self):
         return self._version
 
+    @property
+    def gazes(self):
+        return self._gazes
+
     @tags.setter
     def tags(self, tags):
         self._tags = tags
@@ -60,6 +64,10 @@ class AnnotationIR:
     def version(self, version):
         self._version = version
 
+    @gazes.setter
+    def gazes(self, gazes):
+        self._gazes = gazes
+
     def __getitem__(self, key):
         return getattr(self, key)
 
@@ -70,6 +78,7 @@ class AnnotationIR:
             'tags': self.tags,
             'shapes': self.shapes,
             'tracks': self.tracks,
+            'gazes': self.gazes
         }
 
     def serialize(self):
@@ -93,12 +102,14 @@ class AnnotationIR:
         self.tags = data['tags']
         self.shapes = data['shapes']
         self.tracks = data['tracks']
+        self.gazes = data['gazes']
 
     def reset(self):
         self._version = 0
         self._tags = []
         self._shapes = []
         self._tracks = []
+        self._gazes = []
 
 class Annotation:
     Attribute = namedtuple('Attribute', 'name, value')
