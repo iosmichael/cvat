@@ -1509,7 +1509,7 @@ class ShapeCollectionView {
             window.cvat.player.geometry.frameWidth = frame.width;
             window.cvat.player.geometry.frameHeight = frame.height;
         */
-        let pts = this._controller._model._gazes[this._frameMarker].points;
+        let pts = this._controller._model._gazes[window.cvat.player.frames.current].points;
         var pt = [{
             'x': pts[0] * 640,
             'y': pts[1] * 480
@@ -1538,7 +1538,7 @@ class ShapeCollectionView {
         if (this._textGaze) {
             this._textGaze.remove();
         }
-        let confidence = this._controller._model._gazes[this._frameMarker].confidence
+        let confidence = this._controller._model._gazes[window.cvat.player.frames.current].confidence
         this._textGaze = this._frameContent.text(function(add){
             add.tspan('Conf. ' + +confidence.toFixed(2))
         }).move(ptText.x, ptText.y);
