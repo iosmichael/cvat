@@ -1,0 +1,6 @@
+# Pod
+# Deployment
+# Service
+# PersistentVolumes
+---
+apiVersion: v1

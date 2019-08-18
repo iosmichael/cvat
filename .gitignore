@@ -19,7 +19,7 @@ docker-compose.override.yml
 __pycache__
 *.pyc
 ._*
-.ipynb_checkpoints/*
+*.ipynb
 
 # Ignore development npm files
 package-lock.json
