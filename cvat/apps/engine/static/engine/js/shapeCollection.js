@@ -241,6 +241,7 @@ class ShapeCollectionModel extends Listener {
 
         // Make copy of data in order to don't affect original data
         data = JSON.parse(JSON.stringify(data));
+        console.log(data);
         this._gazes = data.gazes;
         for (const imported of data.shapes.concat(data.tracks)) {
             // Conversion from client object format to server object format
@@ -1509,6 +1510,7 @@ class ShapeCollectionView {
             window.cvat.player.geometry.frameWidth = frame.width;
             window.cvat.player.geometry.frameHeight = frame.height;
         */
+        console.log(this._controller._model._gazes);
         let pts = this._controller._model._gazes[window.cvat.player.frames.current].points;
         var pt = [{
             'x': pts[0] * 640,

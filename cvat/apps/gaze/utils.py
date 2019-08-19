@@ -35,16 +35,15 @@ def save_gazes_to_db(pk, file_path):
 		data = np.load(file_path)
 		# sort data based on timestamp
 		gazes = []
-		start_frame, stop_frame = db_task.start_frame, db_task.stop_frame
-		for i, item in enumerate(sorted(list(data), key=lambda x: x['timestamp'])):
-			if (start_frame <= i) and (i <= stop_frame):
-				gazes.append(Gaze(
-					task=db_task,
-					frame=i,
-					points=item['norm_pos'],
-					confidence=item['confidence'],
-					topic=item['topic']))
+		for i, item in enumerate(data):
+			gazes.append(Gaze(
+				task=db_task,
+				frame=i,
+				points=item['norm_pos'],
+				confidence=item['confidence'],
+				topic=item['topic']))
 		Gaze.objects.bulk_create(gazes)
+		slogger.glob.info("data created from file {}".format(file_path))
 		slogger.glob.info("New gaze data created for task {}".format(pk))
 	else:
 		slogger.glob.info("Couldn't find gaze data for task {}".format(pk))
