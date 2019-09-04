@@ -1507,43 +1507,78 @@ class ShapeCollectionView {
 
         /*
         Gaze Feature Added:
-            window.cvat.player.geometry.frameWidth = frame.width;
-            window.cvat.player.geometry.frameHeight = frame.height;
         */
-        console.log(this._controller._model._gazes);
+        // console.log(this._controller._model._gazes);
+        let imgWidth = window.cvat.player.geometry.frameWidth;
+        let imgHeight = window.cvat.player.geometry.frameHeight;
         let pts = this._controller._model._gazes[window.cvat.player.frames.current].points;
         var pt = [{
-            'x': pts[0] * 640,
-            'y': pts[1] * 480
+            'x': pts[0] * imgWidth,
+            'y': (1-pts[1]) * imgHeight
         }];
         pt = window.cvat.translate.points.actualToCanvas(pt)[0];
         if (this._currentGaze) {
+            this._prev_g = {'x': this._currentGaze.x(), 'y': this._currentGaze.y()}
             this._currentGaze.remove();
         }
-        var radial = this._frameContent.gradient('radial', function(stop) {
-            stop.at(0, 'rgba(246, 62, 73, 1)')
-            stop.at(0.5, 'rgba(246, 62, 73, 0.6)')
-            stop.at(1, 'rgba(246, 62, 73, 0)')
-        })
+        if (this._line) {
+            this._line.remove();
+        }
 
-        this._currentGaze = this._frameContent.circle(50).attr({
+        if (this._prev_g != undefined && window.cvat.player.frames.current > 0) {
+            this._line = this._frameContent.line(pt.x + 20, pt.y + 20, this._prev_g.x + 20, this._prev_g.y + 20).stroke({'width': 0.5, 'fill': 'black'})
+        } else {
+            console.log('undefined this._prev_g')
+        }
+        var radial = this._frameContent.gradient('radial', function(stop) {
+            stop.at(0, 'rgba(0, 177, 106, 1)')
+            stop.at(0.7, 'rgba(63, 195, 128, 0.9)')
+            stop.at(1, 'rgba(63, 195, 128, 0.3)')
+        })
+        this._currentGaze = this._frameContent.circle(40).attr({
             'fill': radial,
             'z_order': 1,
             'fill-opacity': 0.9
         }).move(pt.x, pt.y);
-
+        let offset = 50
         var ptText = [{
-            'x': 640 - 100,
-            'y': 480 - 20
+            'x': imgWidth - offset * 2,
+            'y': imgHeight - offset
         }]
         ptText = window.cvat.translate.points.actualToCanvas(ptText)[0];
         if (this._textGaze) {
             this._textGaze.remove();
         }
+
+        if (this._textBack) {
+            this._textBack.remove();
+        }
+        var ptBox = [{
+            'x': imgWidth - 120,
+            'y': imgHeight - 60
+        }];
+        ptBox = window.cvat.translate.points.actualToCanvas(ptBox)[0];
+        this._textBack = this._frameContent.rect(120, 60).attr({
+            'fill': "rgba(255,255,255,0.3)",
+            'fill-opacity': 1
+        }).move(ptBox.x, ptBox.y);
+
         let confidence = this._controller._model._gazes[window.cvat.player.frames.current].confidence
+        let topic = this._controller._model._gazes[window.cvat.player.frames.current].topic
+
         this._textGaze = this._frameContent.text(function(add){
-            add.tspan('Conf. ' + +confidence.toFixed(2))
+            add.tspan('conf: ' + +confidence.toFixed(2)).newLine()
+            add.tspan('topic: ' + topic).newLine()
         }).move(ptText.x, ptText.y);
+        this._textGaze.font({
+            family: 'open sans',
+            size: 13
+        });
+        this._textGaze.attr({
+            'fill': 'black',
+            'fill-opacity': 1
+        })
+        /* Gaze Annotation */
 
 
         this._updateLabelUIs();

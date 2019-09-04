@@ -31,6 +31,7 @@ node_modules
 # Ignore Caffemodel files
 *.caffemodel
 *.prototxt
+*.icloud
 
 # Ignore Media files
 *.mp4
