@@ -1526,7 +1526,7 @@ class ShapeCollectionView {
         }
 
         if (this._prev_g != undefined && window.cvat.player.frames.current > 0) {
-            this._line = this._frameContent.line(pt.x + 20, pt.y + 20, this._prev_g.x + 20, this._prev_g.y + 20).stroke({'width': 0.5, 'fill': 'black'})
+            this._line = this._frameContent.line(pt.x, pt.y, this._prev_g.x, this._prev_g.y).stroke({'width': 0.5, 'fill': 'black'})
         } else {
             console.log('undefined this._prev_g')
         }
