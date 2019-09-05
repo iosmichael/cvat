@@ -1535,11 +1535,13 @@ class ShapeCollectionView {
             stop.at(0.7, 'rgba(63, 195, 128, 0.9)')
             stop.at(1, 'rgba(63, 195, 128, 0.3)')
         })
+        // move only shift the top left corner to the point, so we have to subtract it by half of the radius
         this._currentGaze = this._frameContent.circle(40).attr({
             'fill': radial,
             'z_order': 1,
             'fill-opacity': 0.9
-        }).move(pt.x, pt.y);
+        }).move(pt.x - 20, pt.y - 20);
+
         let offset = 50
         var ptText = [{
             'x': imgWidth - offset * 2,
